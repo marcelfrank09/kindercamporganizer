@@ -1,4 +1,5 @@
-$('document').ready(function () {
+$('document').ready(function ()
+{
 
     var $groupselect = $("#groupselect");
     var $addButton = $("#btnAdd");
@@ -7,27 +8,50 @@ $('document').ready(function () {
     var $importButton = $("#btnImport");
     var $placeHereButton = $(".btnPlaceHere");
     var groupSelectIndex = 0;
+    var groupcount = 9;
+    var gcount = [0, 0, 0, 0, 0, 0, 0, 0, 0];
 
-    function init() {
-        $groupselect.on("change", function (e) {
+    function init()
+    {
+        String.prototype.replaceAt = function (index, replacement)
+        {
+            return this.substr(0, index) + replacement + this.substr(index + replacement.length);
+        }
+
+        $groupselect.on("change", function (e)
+        {
             groupSelectIndex = e.target.selectedIndex;
         });
 
-        $("#search").keyup(function (e) {
-            setTimeout(function () {
-                for (var i = 1; i < 7; i++) {
+        $("#search").keyup(function (e)
+        {
+            setTimeout(function ()
+            {
+                for (var i = 1; i <= groupcount; i++)
+                {
                     var $inputs = $("#tb-group" + i).find("input");
-                    if ($inputs) {
-                        $inputs.each(function (i, input) {
+                    if ($inputs)
+                    {
+                        $inputs.each(function (i, input)
+                        {
                             var $input = $(input);
-                            if (document.getElementById("search").value) {
-                                if (!$input[0].value.includes(document.getElementById("search").value)) {
-                                    $input.parent().hide();
-                                } else {
-                                    $input.parent().show();
+                            if ($input[0].type != "date")
+                            {
+                                if (document.getElementById("search").value)
+                                {
+                                    if (!$input[0].value.includes(document.getElementById("search").value))
+                                    {
+                                        $input.parent().parent().hide();
+                                    }
+                                    else
+                                    {
+                                        $input.parent().parent().show();
+                                    }
                                 }
-                            } else {
-                                $input.parent().show();
+                                else
+                                {
+                                    $input.parent().parent().show();
+                                }
                             }
                         });
                     }
@@ -42,21 +66,29 @@ $('document').ready(function () {
         $placeHereButton.on("click", changeGroup);
     }
 
-    function saveCsvFile() {
-        var rows = [["Present", "Name", "Datum", "Group"]];
+    function saveCsvFile()
+    {
+        var rows = [["Present", "Name", "Datum", "Group", "Gender"]];
         var group = 1;
-        $(".childs").each(function (i, e) {
-            if ($(e)[0].children.length > 0) {
-                $($(e)[0].children).each(function (i, e) {
+        $(".childs").each(function (i, e)
+        {
+            if ($(e)[0].children.length > 0)
+            {
+                $($(e)[0].children).each(function (i, e)
+                {
                     var present = $(e).find(".inputGroupElements")[0].children[0];
                     var name = $(e).find(".inputGroupElements")[0].children[1];
                     var date = $(e).find(".inputGroupElements")[0].children[2];
-                    if ($(present).find(".btn-dark").length > 0) {
+                    var gender = group > 4 ? "w" : "m";
+                    if ($(present).find(".btn-dark").length > 0)
+                    {
                         present = false;
-                    } else {
+                    }
+                    else
+                    {
                         present = true;
                     }
-                    var data = [present, name.value, date.value, "Gruppe " + group];
+                    var data = [present, name.value, date.value, "Gruppe " + group, gender];
                     rows.push(data);
                 })
             }
@@ -65,7 +97,8 @@ $('document').ready(function () {
 
 
         var csvContent = "data:text/csv;charset=utf-8,";
-        rows.forEach(function (rowArray) {
+        rows.forEach(function (rowArray)
+        {
             var row = rowArray.join(",");
             csvContent += row + "\r\n";
         });
@@ -79,66 +112,86 @@ $('document').ready(function () {
         link.click();
     }
 
-    function loadCsvFile() {
+    function loadCsvFile()
+    {
         $.ajax({
             type: "GET",
             url: "../data/import_data.csv",
             dataType: "text",
-            success: function (data) {
+            success: function (data)
+            {
                 processCsvData(data);
             },
-            error: function () {
+            error: function ()
+            {
                 alert('error!');
             }
         });
     }
 
-    function processCsvData(allText) {
+    function processCsvData(allText)
+    {
         var allTextLines = allText.split(/\r\n|\n/);
         var headers = allTextLines[0].split(',');
         var lines = [];
 
-        for (var i = 1; i < allTextLines.length; i++) {
+        for (var i = 1; i < allTextLines.length; i++)
+        {
             var data = allTextLines[i].split(',');
-            if (data.length == headers.length) {
+            if (data.length == headers.length)
+            {
 
                 var tarr = [];
-                for (var j = 0; j < headers.length; j++) {
+                for (var j = 0; j < headers.length; j++)
+                {
                     tarr.push(headers[j] + ":" + data[j]);
                 }
                 lines.push(tarr);
             }
         }
-        $(lines).each(function (i, e) {
+        $(lines).each(function (i, e)
+        {
             var present = false;
             var name = "";
             var date = "";
             var group = "Gruppe 1";
-            if (e.length > 4) {
+            var gender = "m";
+            if (e.length > 5)
+            {
                 name = e[3].split(":")[1] + " " + e[4].split(":")[1];
                 date = e[5].split(":")[1];
-            } else {
+            }
+            else
+            {
                 present = e[0].split(":")[1];
                 name = e[1].split(":")[1];
                 date = e[2].split(":")[1];
                 group = e[3].split(":")[1];
+                gender = e[4].split(":")[1];
             }
 
-            addNewChild(e, name, date, group, present);
+            addNewChild(e, name, date, group, present, gender);
         })
     }
 
-    function edit() {
+    function edit()
+    {
         var readOnlyElements = getAllElementsWithAttribute("editableelement");
-        if (readOnlyElements.length > 0) {
-            if (readOnlyElements[0].getAttribute("readonly") != null) {
-                $(readOnlyElements).each(function (i, e) {
+        if (readOnlyElements.length > 0)
+        {
+            if (readOnlyElements[0].getAttribute("readonly") != null)
+            {
+                $(readOnlyElements).each(function (i, e)
+                {
                     e.removeAttribute("readonly");
                     $(".removeButton").show();
                     $(".changeButton").show();
                 })
-            } else {
-                $(readOnlyElements).each(function (i, e) {
+            }
+            else
+            {
+                $(readOnlyElements).each(function (i, e)
+                {
                     e.setAttribute("readonly", true);
                     $(".removeButton").hide();
                     $(".changeButton").hide();
@@ -147,19 +200,25 @@ $('document').ready(function () {
         }
     }
 
-    function changeGroup(e) {
+    function changeGroup(e)
+    {
         var tbody = $(e.currentTarget).parent().parent().find("tbody")[0];
         var trElement = $($(".inputGroupElements.choosed")[0]).parent().parent();
         var newId = trElement[0].getAttribute("id");
-        newId = newId.replace(/.$/,tbody.getAttribute("id").charAt(tbody.getAttribute("id").length-1));
+        var oldGroupId = newId.charAt(newId.length - 11);
+        var newGroupId = tbody.getAttribute("id").charAt(tbody.getAttribute("id").length - 1);
+        newId = newId.replaceAt(newId.length - 11, newGroupId);
         trElement[0].setAttribute("id", newId);
-        console.log(trElement[0].getAttribute("id"));
         tbody.appendChild(trElement[0]);
         $(".tabletoolbar").hide();
         $(".inputGroupElements.choosed").removeClass("choosed");
+        gcount[oldGroupId-1]--;
+        gcount[newGroupId-1]++;
+        updateGroupCounts();
     }
 
-    function createTableRow(id, name, date, present) {
+    function createTableRow(id, name, date, present)
+    {
         var trElement = document.createElement("tr");
         trElement.setAttribute("id", id);
         var tdElement = document.createElement("td");
@@ -171,14 +230,19 @@ $('document').ready(function () {
         inputGroupPrependElement.classList.add("input-group-prepend");
         var btnPresentElement = document.createElement("button");
         btnPresentElement.classList.add("btn");
-        btnPresentElement.classList.add("btn-dark");
+        var presentButtonStyle = present == "true" ? "btn-success" : "btn-dark";
+        btnPresentElement.classList.add(presentButtonStyle);
         btnPresentElement.setAttribute("id", "btnPresent");
         btnPresentElement.setAttribute("style", "width: 50px");
-        $(btnPresentElement).on("click", function (e) {
-            if (btnPresentElement.classList.contains("btn-dark")) {
+        $(btnPresentElement).on("click", function (e)
+        {
+            if (btnPresentElement.classList.contains("btn-dark"))
+            {
                 btnPresentElement.classList.remove("btn-dark");
                 btnPresentElement.classList.add("btn-success");
-            } else {
+            }
+            else
+            {
                 btnPresentElement.classList.add("btn-dark");
                 btnPresentElement.classList.remove("btn-success");
             }
@@ -194,10 +258,14 @@ $('document').ready(function () {
         inputGroupAppendElement.setAttribute("style", "display: none;");
         var btnRemoveElement = document.createElement("button");
         btnRemoveElement.classList.add("btn");
-        btnRemoveElement.classList.add(present ? "btn-success" : "btn-dark");
+        btnRemoveElement.classList.add("btn-dark");
         btnRemoveElement.setAttribute("id", "btnPresent");
         btnRemoveElement.setAttribute("style", "width: 50px");
-        $(btnRemoveElement).on("click", function (e) {
+        $(btnRemoveElement).on("click", function (e)
+        {
+            var groupId = id.charAt(id.length - 11);
+            gcount[groupId-1]--;
+            updateGroupCounts();
             trElement.remove();
         });
         var iconRemoveElement = document.createElement("i");
@@ -211,17 +279,20 @@ $('document').ready(function () {
         inputGroupAppendElement2.setAttribute("style", "display: none;");
         var btnChangeElement = document.createElement("button");
         btnChangeElement.classList.add("btn");
-        btnChangeElement.classList.add(present ? "btn-success" : "btn-dark");
+        btnChangeElement.classList.add("btn-dark");
         btnChangeElement.setAttribute("id", "btnPresent");
         btnChangeElement.setAttribute("style", "width: 50px");
-        $(btnChangeElement).on("click", function (e) {
+        $(btnChangeElement).on("click", function (e)
+        {
             var $clickedInputGroup = $($(e.currentTarget).parent().parent())[0];
             var otherChild = $clickedInputGroup.classList.contains("choosed");
-            if ($(".tabletoolbar").is(":visible")) {
+            if ($(".tabletoolbar").is(":visible"))
+            {
                 $(".tabletoolbar").hide();
                 $(".inputGroupElements").removeClass("choosed");
             }
-            if (!otherChild) {
+            if (!otherChild)
+            {
                 $(".tabletoolbar").show();
                 inputGroupElement.classList.add("choosed");
             }
@@ -263,40 +334,137 @@ $('document').ready(function () {
         return trElement;
     }
 
-    function addNewChild(e, name, date, group, present) {
+    function addNewChild(e, name, date, group, present, gender)
+    {
         var name = name !== undefined ? name : document.getElementById("newChildName").value;
         var date = date !== undefined ? date : document.getElementById("newChildDate").value;
-        var group = group ? group : $("#groupselect")[0][groupSelectIndex].text;
-        console.log(present ? present : false);
-        var present = present ? present : false;
 
-        if (!name || !group | !date) {
+        if (date.includes("."))
+        {
+            date = date.split(".")[2] + "-" + date.split(".")[1] + "-" + date.split(".")[0];
+        }
+
+        var age = calcYear(date);
+        if (age > 13)
+        {
+            groupSelectIndex = 3;
+        }
+        else if (age > 11)
+        {
+            groupSelectIndex = 2;
+        }
+        else if (age > 8)
+        {
+            groupSelectIndex = 1;
+        }
+        else if (age > 5)
+        {
+            groupSelectIndex = 0;
+        }
+        else
+        {
+            groupSelectIndex = 8;
+        }
+
+        if (gender == "w" && groupSelectIndex != 8)
+        {
+            groupSelectIndex += 4;
+        }
+
+
+        var group = group ? group : $("#groupselect")[0][groupSelectIndex].text;
+        var present = present !== undefined ? present : false;
+
+        if (!name || !group | !date)
+        {
             console.log("Name, Date and Group should not be empty!");
             return;
         }
 
-        var trId = name.trim().replace(new RegExp(" ", 'g'), "-") + group.trim().replace(new RegExp(" ", 'g'), "-");
+        var trId = name.trim().replace(new RegExp(" ", 'g'), "-") + group.trim().replace(new RegExp(" ", 'g'), "-") + date.trim();
         var element = createTableRow(trId, name, date, present);
 
-        if (document.getElementById(trId)) {
-            window.alert("The child is already present!");
-        } else {
+        if (document.getElementById(trId))
+        {
+            console.log("The child is already present! - " + trId);
+        }
+        else
+        {
+            gcount[groupSelectIndex]++;
+            $(".groupcount" + (groupSelectIndex + 1))[0].innerText = gcount[groupSelectIndex];
             document.getElementById("tb-group" + (groupSelectIndex + 1)).appendChild(element);
             document.getElementById("newChildName").value = "";
         }
 
     }
 
-    function getAllElementsWithAttribute(attribute) {
+    function calcYear(date)
+    {
+        a = date.split("-")[0];
+        b = date.split("-")[1];
+        c = date.split("-")[2];
+        f = new Date(a, b, c, 0, 0);
+        g = new Date(2019, 03, 04, 0, 0);
+        minuten = g.getMinutes() - f.getMinutes();
+        stunden = g.getHours() - f.getHours();
+        tage = g.getDate() - f.getDate();
+        monate = g.getMonth() - f.getMonth();
+        jahre = g.getYear() - f.getYear();
+        if (minuten < 0)
+        {
+            minuten = 60 + minuten;
+            stunden--;
+        }
+        if (stunden < 0)
+        {
+            stunden = 24 + stunden;
+            tage--;
+        }
+        if (tage < 0)
+        {
+            tage = 30 + tage;
+            monate--;
+        }
+        if (monate < 0)
+        {
+            monate = 12 + monate;
+            jahre--;
+        }
+        if (jahre > 2000)
+        {
+            jahre = jahre - 2000
+        }
+        if (jahre > 1900)
+        {
+            jahre = jahre - 1900
+        }
+
+        return jahre;
+
+    }
+
+    function getAllElementsWithAttribute(attribute)
+    {
         var matchingElements = [];
         var allElements = document.getElementsByTagName('*');
-        for (var i = 0, n = allElements.length; i < n; i++) {
-            if (allElements[i].getAttribute(attribute) !== null) {
+        for (var i = 0, n = allElements.length; i < n; i++)
+        {
+            if (allElements[i].getAttribute(attribute) !== null)
+            {
                 // Element exists with attribute. Add to array.
                 matchingElements.push(allElements[i]);
             }
         }
         return matchingElements;
+    }
+
+    function updateGroupCounts()
+    {
+        for (var i = 1; i <= groupcount; i++)
+        {
+            console.log(gcount[i - 1]);
+            $(".groupcount" + i)[0].innerText = gcount[i-1];
+        }
     }
 
     init();

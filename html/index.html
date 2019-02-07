@@ -29,7 +29,7 @@
         </div>
         <input id="newChildName" type="text" class="form-control" placeholder="Neues Kind hinzufügen">
         <input id="newChildDate" type="date" class="form-control" value="2003-03-04" min="2003-03-04" max="2019-03-04">
-        <div class="input-group-append">
+        <div class="input-group-append" style="display:none">
             <select class="form-control" id="groupselect">
                 <option selected>Gruppe 1</option>
                 <option>Gruppe 2</option>
@@ -47,12 +47,13 @@
     <div class="row">
         <div class="col-sm margin-padding-5">
             <table class="table table-bordered">
+                <div class="groupcount1">0</div>
                 <div class="toolbar tabletoolbar">
                     <button class="btn btn-primary btnPlaceHere" title="Place the child to this group">Place here</button>
                 </div>
                 <thead class="thead-dark">
                 <tr>
-                    <th>Gruppe 1</th>
+                    <th>Gruppe 1 | 6-8 Jahre ( - )</th>
                 </tr>
                 </thead>
                 <tbody class="childs" id="tb-group1">
@@ -61,12 +62,13 @@
         </div>
         <div class="col-sm margin-padding-5">
             <table class="table table-bordered">
+                <div class="groupcount2">0</div>
                 <div class="toolbar tabletoolbar">
                     <button class="btn btn-primary btnPlaceHere" title="Place the child to this group">Place here</button>
                 </div>
                 <thead class="thead-dark">
                 <tr>
-                    <th>Gruppe 2</th>
+                    <th>Gruppe 2 | 9-11 Jahre ( - )</th>
                 </tr>
                 </thead>
                 <tbody class="childs" id="tb-group2">
@@ -75,15 +77,31 @@
         </div>
         <div class="col-sm margin-padding-5">
             <table class="table table-bordered">
+                <div class="groupcount3">0</div>
                 <div class="toolbar tabletoolbar">
                     <button class="btn btn-primary btnPlaceHere" title="Place the child to this group">Place here</button>
                 </div>
                 <thead class="thead-dark">
                 <tr>
-                    <th>Gruppe 3</th>
+                    <th>Gruppe 3 | 12-13 Jahre (Erich F.)</th>
                 </tr>
                 </thead>
                 <tbody class="childs" id="tb-group3">
+                </tbody>
+            </table>
+        </div>
+        <div class="col-sm margin-padding-5">
+            <table class="table table-bordered">
+                <div class="groupcount4">0</div>
+                <div class="toolbar tabletoolbar">
+                    <button class="btn btn-primary btnPlaceHere" title="Place the child to this group">Place here</button>
+                </div>
+                <thead class="thead-dark">
+                <tr>
+                    <th>Gruppe 4 | 14-16 Jahre (Philipp A.)</th>
+                </tr>
+                </thead>
+                <tbody class="childs" id="tb-group4">
                 </tbody>
             </table>
         </div>
@@ -91,26 +109,13 @@
     <div class="row">
         <div class="col-sm margin-padding-5">
             <table class="table table-bordered">
+                <div class="groupcount5">0</div>
                 <div class="toolbar tabletoolbar">
                     <button class="btn btn-primary btnPlaceHere" title="Place the child to this group">Place here</button>
                 </div>
                 <thead class="thead-dark">
                 <tr>
-                    <th>Gruppe 4</th>
-                </tr>
-                </thead>
-                <tbody class="childs" id="tb-group4">
-                </tbody>
-            </table>
-        </div>
-        <div class="col-sm margin-padding-5">
-            <table class="table table-bordered">
-                <div class="toolbar tabletoolbar">
-                    <button class="btn btn-primary btnPlaceHere" title="Place the child to this group">Place here</button>
-                </div>
-                <thead class="thead-dark">
-                <tr>
-                    <th>Gruppe 5</th>
+                    <th>Gruppe 5 | 6-8 Jahre (Anita F.)</th>
                 </tr>
                 </thead>
                 <tbody class="childs" id="tb-group5">
@@ -119,15 +124,63 @@
         </div>
         <div class="col-sm margin-padding-5">
             <table class="table table-bordered">
+                <div class="groupcount6">0</div>
                 <div class="toolbar tabletoolbar">
                     <button class="btn btn-primary btnPlaceHere" title="Place the child to this group">Place here</button>
                 </div>
                 <thead class="thead-dark">
                 <tr>
-                    <th>Gruppe 6</th>
+                    <th>Gruppe 6 | 9-11 Jahre (Regina A.)</th>
                 </tr>
                 </thead>
                 <tbody class="childs" id="tb-group6">
+                </tbody>
+            </table>
+        </div>
+        <div class="col-sm margin-padding-5">
+            <table class="table table-bordered">
+                <div class="groupcount7">0</div>
+                <div class="toolbar tabletoolbar">
+                    <button class="btn btn-primary btnPlaceHere" title="Place the child to this group">Place here</button>
+                </div>
+                <thead class="thead-dark">
+                <tr>
+                    <th>Gruppe 7 | 12-13 Jahre (Jasmin F. & Julia A.)</th>
+                </tr>
+                </thead>
+                <tbody class="childs" id="tb-group7">
+                </tbody>
+            </table>
+        </div>
+        <div class="col-sm margin-padding-5">
+            <table class="table table-bordered">
+                <div class="groupcount8">0</div>
+                <div class="toolbar tabletoolbar">
+                    <button class="btn btn-primary btnPlaceHere" title="Place the child to this group">Place here</button>
+                </div>
+                <thead class="thead-dark">
+                <tr>
+                    <th>Gruppe 8 | 14-16 Jahre (Olga A.)</th>
+                </tr>
+                </thead>
+                <tbody class="childs" id="tb-group8">
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm margin-padding-5">
+            <table class="table table-bordered">
+                <div class="groupcount9">0</div>
+                <div class="toolbar tabletoolbar">
+                    <button class="btn btn-primary btnPlaceHere" title="Place the child to this group">Place here</button>
+                </div>
+                <thead class="thead-dark">
+                <tr>
+                    <th>Gruppe 9 | 4-5 Jahre (Bambinis)</th>
+                </tr>
+                </thead>
+                <tbody class="childs" id="tb-group9">
                 </tbody>
             </table>
         </div>
